@@ -1,0 +1,19 @@
+.App {
+  height: 100vh;
+  display: flex;
+  flex-flow: column;
+  background-color: #80808080;
+  .ToolbarContainer {
+    width: 100%;
+    :global {
+      .ant-btn {
+        margin-right: 1rem;
+      }
+    }
+  }
+  .MainWindow {
+    width: 100%;
+    height: calc(100vh - 5rem);
+    display: flex;
+  }
+}
