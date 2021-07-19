@@ -9,7 +9,7 @@ const componentList: Component[] = [
     },
     icon: 'text',
     style: {
-      width: 200,
+      // width: 200,
       height: 22,
       fontSize: 14,
       fontWeight: 500,
