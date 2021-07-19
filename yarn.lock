@@ -367,6 +367,14 @@
   resolved "https://registry.nlark.com/@types/estree/download/@types/estree-0.0.50.tgz?cache=0&sync_timestamp=1625598996573&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Festree%2Fdownload%2F%40types%2Festree-0.0.50.tgz#1e0caa9364d3fccd2931c3ed96fdbeaa5d4cca83"
   integrity sha1-Hgyqk2TT/M0pMcPtlv2+ql1MyoM=
 
+"@types/hoist-non-react-statics@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.nlark.com/@types/hoist-non-react-statics/download/@types/hoist-non-react-statics-3.3.1.tgz?cache=0&sync_timestamp=1621241339435&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fhoist-non-react-statics%2Fdownload%2F%40types%2Fhoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
+  integrity sha1-ESSq/lEYy1kZd66xzqrtEHDrA58=
+  dependencies:
+    "@types/react" "*"
+    hoist-non-react-statics "^3.3.0"
+
 "@types/json-schema@*", "@types/json-schema@^7.0.7":
   version "7.0.8"
   resolved "https://registry.nlark.com/@types/json-schema/download/@types/json-schema-7.0.8.tgz#edf1bf1dbf4e04413ca8e5b17b3b7d7d54b59818"
@@ -403,6 +411,13 @@
   version "17.0.9"
   resolved "https://registry.nlark.com/@types/react-dom/download/@types/react-dom-17.0.9.tgz#441a981da9d7be117042e1a6fd3dac4b30f55add"
   integrity sha1-RBqYHanXvhFwQuGm/T2sSzD1Wt0=
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-reconciler@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.nlark.com/@types/react-reconciler/download/@types/react-reconciler-0.18.0.tgz#fce2b444103f44904e73eba349ac6552e2771f64"
+  integrity sha1-/OK0RBA/RJBOc+ujSaxlUuJ3H2Q=
   dependencies:
     "@types/react" "*"
 
@@ -1646,6 +1661,13 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
+hoist-non-react-statics@^3.3.0:
+  version "3.3.2"
+  resolved "https://registry.nlark.com/hoist-non-react-statics/download/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
+  integrity sha1-7OCsr3HWLClpwuxZ/v9CpLGoW0U=
+  dependencies:
+    react-is "^16.7.0"
+
 hosted-git-info@^2.1.4:
   version "2.8.9"
   resolved "https://registry.nlark.com/hosted-git-info/download/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
@@ -1657,6 +1679,15 @@ hosted-git-info@^4.0.1:
   integrity sha1-XkJVB+7eT+qEa3Ji8IOEVsQgmWE=
   dependencies:
     lru-cache "^6.0.0"
+
+hox@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.nlark.com/hox/download/hox-1.1.4.tgz#3925e19c0f6ec6ec9840f25cdd0d4fe99709f4bc"
+  integrity sha1-OSXhnA9uxuyYQPJc3Q1P6ZcJ9Lw=
+  dependencies:
+    "@types/hoist-non-react-statics" "^3.3.1"
+    "@types/react-reconciler" "^0.18.0"
+    react-reconciler "^0.25.1"
 
 html-tags@^3.1.0:
   version "3.1.0"
@@ -2619,7 +2650,7 @@ progress@^2.0.0:
   resolved "https://registry.nlark.com/progress/download/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha1-foz42PW48jnBvGi+tOt4Vn1XLvg=
 
-prop-types@^15.7.2:
+prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.nlark.com/prop-types/download/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha1-UsQedbjIfnK52TYOAga5ncv/psU=
@@ -3000,10 +3031,20 @@ react-dom@^17.0.0:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-is@^16.12.0, react-is@^16.8.1:
+react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.nlark.com/react-is/download/react-is-16.13.1.tgz?cache=0&sync_timestamp=1626279361484&other_urls=https%3A%2F%2Fregistry.nlark.com%2Freact-is%2Fdownload%2Freact-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
+
+react-reconciler@^0.25.1:
+  version "0.25.1"
+  resolved "https://registry.nlark.com/react-reconciler/download/react-reconciler-0.25.1.tgz#f9814d59d115e1210762287ce987801529363aaa"
+  integrity sha1-+YFNWdEV4SEHYih86YeAFSk2Oqo=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.1"
 
 react-refresh@^0.10.0:
   version "0.10.0"
@@ -3198,6 +3239,14 @@ sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.nlark.com/sax/download/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha1-KBYjTiN4vdxOU1T6tcqold9xANk=
+
+scheduler@^0.19.1:
+  version "0.19.1"
+  resolved "https://registry.nlark.com/scheduler/download/scheduler-0.19.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fscheduler%2Fdownload%2Fscheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
+  integrity sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 scheduler@^0.20.2:
   version "0.20.2"
