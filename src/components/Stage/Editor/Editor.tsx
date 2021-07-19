@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { CompDataItem } from '../../../store/interfaces';
 import { useCompDataModel } from '../../../store';
-import { Text } from '../../../customComponents';
+import { Text, Rect } from '../../../customComponents';
 import styles from './index.module.less';
 
 const customComponentsMap: { [k in string]: React.FC<any> } = {
   Text,
+  Rect,
 };
 
 const Editor: React.FC = () => {

@@ -22,8 +22,6 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
   };
   const onBlur = (e: any) => {
     const textValue = e.target.innerHTML || '&nbsp;';
-    const changeComp = { ...compDataItem, props: { value: textValue } };
-    console.log({ changeComp });
     changeComponent(compDataItem.id, { ...compDataItem, props: { value: textValue } });
   };
 
