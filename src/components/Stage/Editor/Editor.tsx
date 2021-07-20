@@ -12,7 +12,7 @@ const customComponentsMap: { [k in string]: React.FC<any> } = {
 const Editor: React.FC = () => {
   const { compData } = useCompDataModel();
   useEffect(() => {
-    console.log(compData);
+    // console.log(compData);
   }, [compData]);
   return (
     <div className={styles.EditorContainer}>
