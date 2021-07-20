@@ -23,6 +23,7 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
   const onBlur = (e: any) => {
     const textValue = e.target.innerHTML || '&nbsp;';
     changeComponent(compDataItem.id, { ...compDataItem, props: { value: textValue } });
+    setCanEdit(false);
   };
 
   return (
