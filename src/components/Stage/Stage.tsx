@@ -1,11 +1,12 @@
 import React from 'react';
 import componentList from '../../customComponents/componentList';
 import { deepClone, generateId } from '../../utils';
-import { useCompDataModel } from '../../store';
+import { useCompDataModel, useCurrentCompModel } from '../../store';
 import { Editor } from './Editor';
 import styles from './index.module.less';
 
 const Stage: React.FC = () => {
+  const { setCurrentComp } = useCurrentCompModel();
   const { addComponent } = useCompDataModel();
   const onDrop = (e: any) => {
     e.preventDefault();
@@ -18,13 +19,18 @@ const Stage: React.FC = () => {
     addComponent(component);
   };
 
-  const onDragOver = (e: any) => {
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
   };
+
+  const deselectCurrentComp = () => {
+    setCurrentComp(null);
+  };
+
   return (
     <div className={styles.StageContainer}>
-      <div className={styles.StageContent} onDrop={onDrop} onDragOver={onDragOver}>
+      <div className={styles.StageContent} onDrop={onDrop} onDragOver={onDragOver} onMouseUp={deselectCurrentComp}>
         <Editor />
       </div>
     </div>

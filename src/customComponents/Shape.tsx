@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CompDataItem } from '../store/interfaces';
 import styles from './index.module.less';
 import { useCurrentCompModel, useCompDataModel } from '../store';
@@ -6,8 +6,13 @@ import { useCurrentCompModel, useCompDataModel } from '../store';
 const pointList = ['t', 'r', 'b', 'l', 'lt', 'rt', 'rb', 'lb'];
 
 const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
-  const { setCurrentComp } = useCurrentCompModel();
+  const { currentComp, setCurrentComp } = useCurrentCompModel();
   const { changeComponent } = useCompDataModel();
+  const [isActive, setIsActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    setIsActive(currentComp?.id === compDataItem.id);
+  }, [currentComp]);
 
   const getPointStyle = (point: string) => {
     const {
@@ -67,6 +72,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
     const up = () => {
+      setCurrentComp(compDataItem);
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     };
@@ -77,9 +83,9 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
 
   return (
     <div className={styles.Shape} onMouseDown={onMouseDown}>
-      {pointList.map((point) => (
+      {isActive ? pointList.map((point) => (
         <div key={point} className={styles.ShapePoint} style={getPointStyle(point)} />
-      ))}
+      )) : null}
       {children}
     </div>
   );
