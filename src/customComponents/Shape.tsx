@@ -76,7 +76,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
         ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
           ? currY - startY + startTop
           : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-        : pos.top = stageContent.top;
+        : stageContent.top;
 
       // eslint-disable-next-line no-nested-ternary
       pos.left = currX - startX + startLeft >= stageContent.left
