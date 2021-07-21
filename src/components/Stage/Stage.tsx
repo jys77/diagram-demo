@@ -30,7 +30,7 @@ const Stage: React.FC = () => {
 
   return (
     <div className={styles.StageContainer}>
-      <div className={styles.StageContent} onDrop={onDrop} onDragOver={onDragOver} onMouseUp={deselectCurrentComp}>
+      <div id="stageContent" className={styles.StageContent} onDrop={onDrop} onDragOver={onDragOver} onMouseUp={deselectCurrentComp}>
         <Editor />
       </div>
     </div>

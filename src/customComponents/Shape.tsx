@@ -6,6 +6,9 @@ import { useCurrentCompModel, useCompDataModel } from '../store';
 const pointList = ['t', 'r', 'b', 'l', 'lt', 'rt', 'rb', 'lb'];
 
 const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
+  const stageContent = document.querySelector('#stageContent')?.getBoundingClientRect() || {
+    top: 0, left: 0, height: 0, width: 0,
+  };
   const { currentComp, setCurrentComp } = useCurrentCompModel();
   const { changeComponent } = useCompDataModel();
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -67,8 +70,21 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
-      pos.top = currY - startY + startTop;
-      pos.left = currX - startX + startLeft;
+
+      // eslint-disable-next-line no-nested-ternary
+      pos.top = currY - startY + startTop >= stageContent.top
+        ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+          ? currY - startY + startTop
+          : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+        : pos.top = stageContent.top;
+
+      // eslint-disable-next-line no-nested-ternary
+      pos.left = currX - startX + startLeft >= stageContent.left
+        ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+          ? currX - startX + startLeft
+          : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+        : stageContent.left;
+
       changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
     const up = () => {
