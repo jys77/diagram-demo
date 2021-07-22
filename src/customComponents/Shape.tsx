@@ -58,7 +58,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     };
   };
 
-  const onMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const mouseDownOnShapeHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     setCurrentComp(compDataItem);
     const pos = { ...compDataItem.style };
@@ -97,10 +97,51 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     document.addEventListener('mouseup', up);
   };
 
+  const mouseDownOnPointHandler = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, point: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const hasT = /t/.test(point);
+    const hasL = /l/.test(point);
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const pos = { ...compDataItem.style };
+    const startTop = Number(pos.top);
+    const startLeft = Number(pos.left);
+    const startHeight = Number(pos.height);
+    const startWidth = Number(pos.width);
+
+    const move = (moveEvent: MouseEvent) => {
+      const currX = moveEvent.clientX;
+      const currY = moveEvent.clientY;
+      const offsetX = currX - startX;
+      const offsetY = currY - startY;
+      pos.height = hasT ? Math.abs(startHeight - offsetY) : startHeight + offsetY;
+      pos.width = hasL ? Math.abs(startWidth - offsetX) : startWidth + offsetX;
+      pos.top = hasT ? startTop + offsetY : startTop;
+      pos.left = hasL ? startLeft + offsetX : startLeft;
+      changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+    };
+
+    const up = () => {
+      setCurrentComp(compDataItem);
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+    };
+    document.addEventListener('mousemove', move);
+    document.addEventListener('mouseup', up);
+  };
+
   return (
-    <div className={styles.Shape} onMouseDown={onMouseDown}>
+    <div className={styles.Shape} onMouseDown={mouseDownOnShapeHandler}>
       {isActive ? pointList.map((point) => (
-        <div key={point} className={styles.ShapePoint} style={getPointStyle(point)} />
+        <div
+          key={point}
+          className={styles.ShapePoint}
+          style={getPointStyle(point)}
+          onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
+        />
       )) : null}
       {children}
     </div>
