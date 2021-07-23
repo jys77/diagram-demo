@@ -5,7 +5,7 @@ import { useCompDataModel } from '../store';
 const Text: React.FC<CompDataItem> = (compDataItem) => {
   const ref = useRef(null);
   const { changeComponent } = useCompDataModel();
-  const { id, props, style } = compDataItem;
+  const { id, props } = compDataItem;
   const [canEdit, setCanEdit] = useState<boolean>(false);
 
   const selectText = (elem: Node) => {
@@ -36,7 +36,6 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: props.value }}
         ref={ref}
-        style={style}
       />
     </div>
   );

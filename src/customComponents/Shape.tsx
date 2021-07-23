@@ -33,8 +33,6 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const {
       width,
       height,
-      top: preTop,
-      left: preLeft,
     } = compDataItem.style as {
       width: number | string;
       height: number | string;
@@ -49,16 +47,16 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const hasL = /l/.test(point);
 
     if (point.length === 2) {
-      left = hasL ? Number(preLeft) : Number(width) + Number(preLeft);
-      top = hasT ? Number(preTop) : Number(height) + Number(preTop);
+      left = hasL ? 0 : Number(width);
+      top = hasT ? 0 : Number(height);
     } else {
       if (hasT || hasB) {
-        left = Number(width) / 2 + Number(preLeft);
-        top = hasT ? Number(preTop) : Number(height) + Number(preTop);
+        left = Number(width) / 2;
+        top = hasT ? 0 : Number(height);
       }
       if (hasL || hasR) {
-        top = Number(height) / 2 + Number(preTop);
-        left = hasL ? Number(preLeft) : Number(width) + Number(preLeft);
+        top = Number(height) / 2;
+        left = hasL ? 0 : Number(width);
       }
     }
 
@@ -147,7 +145,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   };
 
   return (
-    <div className={styles.Shape} onMouseDown={mouseDownOnShapeHandler}>
+    <div className={styles.Shape} style={compDataItem.style} onMouseDown={mouseDownOnShapeHandler}>
       {isActive ? pointList.map((point) => (
         <div
           key={point}
