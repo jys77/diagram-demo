@@ -27,6 +27,7 @@ const useCompData = () => {
 
   return {
     compData,
+    setCompData,
     addComponent,
     changeComponent,
   };
