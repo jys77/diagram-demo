@@ -1,13 +1,15 @@
 import React from 'react';
 import componentList from '../../customComponents/componentList';
 import { deepClone, generateId } from '../../utils';
-import { useCompDataModel, useCurrentCompModel } from '../../store';
+import { useCompDataModel, useCurrentCompModel, useSnapshotModel } from '../../store';
 import { Editor } from './Editor';
 import styles from './index.module.less';
 
 const Stage: React.FC = () => {
   const { setCurrentComp } = useCurrentCompModel();
   const { addComponent } = useCompDataModel();
+  const { recordSnapshot } = useSnapshotModel();
+
   const onDrop = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -16,7 +18,8 @@ const Stage: React.FC = () => {
     component.style.left = e.clientX;
     component.style.position = 'absolute';
     component.id = generateId();
-    addComponent(component);
+    const compData = addComponent(component);
+    recordSnapshot(compData);
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {

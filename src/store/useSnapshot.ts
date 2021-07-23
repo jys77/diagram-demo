@@ -13,7 +13,7 @@ const useSnapshot = () => {
     setSnapshotData(((prevState) => {
       const cloneSnapshotData = deepClone(prevState);
       cloneSnapshotData[snapshotIndex + 1] = compData;
-      return cloneSnapshotData.slice(0, snapshotIndex + 1);
+      return cloneSnapshotData.slice(0, snapshotIndex + 2);
     }));
     setSnapshotIndex(snapshotIndex + 1);
   };
@@ -23,7 +23,7 @@ const useSnapshot = () => {
 
   const undo = () => {
     if (canUndo) {
-      setCompData(snapshotData[snapshotIndex - 1]);
+      setCompData(snapshotData[snapshotIndex - 1] || []);
       setSnapshotIndex(snapshotIndex - 1);
     }
   };

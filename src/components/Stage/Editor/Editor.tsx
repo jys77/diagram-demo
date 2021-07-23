@@ -16,7 +16,7 @@ const Editor: React.FC = () => {
   }, [compData]);
   return (
     <div className={styles.EditorContainer}>
-      {compData.map((comp: CompDataItem, key) => {
+      {compData && compData.map((comp: CompDataItem, key) => {
         const Comp: React.FC<CompDataItem> = customComponentsMap[comp.name];
         return (
           <Shape key={`${comp.name}${key}`} {...comp}>

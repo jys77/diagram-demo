@@ -6,12 +6,14 @@ import { deepClone } from '../utils';
 const useCompData = () => {
   const [compData, setCompData] = useState<CompDataItem[]>([] as CompDataItem[]);
 
-  const addComponent = (component: CompDataItem) => {
+  const addComponent = (component: CompDataItem): CompDataItem[] => {
+    let tempData: CompDataItem[] = [];
     setCompData((prevState) => {
-      const tempData = deepClone(prevState);
+      tempData = deepClone(prevState);
       tempData.push(component);
       return tempData;
     });
+    return tempData;
   };
 
   const changeComponent = (id: number, changedComp: CompDataItem) => {
