@@ -3,7 +3,19 @@ import { CompDataItem } from '../store/interfaces';
 import styles from './index.module.less';
 import { useCurrentCompModel, useCompDataModel } from '../store';
 
-const pointList = ['t', 'r', 'b', 'l', 'lt', 'rt', 'rb', 'lb'];
+const pointList = ['t', 'r', 'b', 'l', 'lt', 'rt', 'rb', 'lb'] as const;
+type Point = (typeof pointList)[number];
+
+enum CURSOR {
+  t = 'n-resize',
+  r = 'e-resize',
+  b = 's-resize',
+  l = 'w-resize',
+  lt = 'nw-resize',
+  rt = 'ne-resize',
+  rb = 'se-resize',
+  lb = 'sw-resize',
+}
 
 const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   const stageContent = document.querySelector('#stageContent')?.getBoundingClientRect() || {
@@ -17,7 +29,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     setIsActive(currentComp?.id === compDataItem.id);
   }, [currentComp]);
 
-  const getPointStyle = (point: string) => {
+  const getPointStyle = (point: Point) => {
     const {
       width,
       height,
@@ -55,6 +67,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       top: `${top}px`,
       marginLeft: '-4px',
       marginTop: '-4px',
+      cursor: CURSOR[point],
     };
   };
 
