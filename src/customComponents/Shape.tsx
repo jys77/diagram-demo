@@ -85,27 +85,31 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
 
-      // eslint-disable-next-line no-nested-ternary
-      pos.top =
-        currY - startY + startTop >= stageContent.top
-          ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-            ? currY - startY + startTop
-            : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-          : stageContent.top;
+      if (currX === startX && currY === startY) {
+        return;
+      }
 
       // eslint-disable-next-line no-nested-ternary
-      pos.left =
-        currX - startX + startLeft >= stageContent.left
-          ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
-            ? currX - startX + startLeft
-            : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
-          : stageContent.left;
+      pos.top = currY - startY + startTop >= stageContent.top
+        ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+          ? currY - startY + startTop
+          : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+        : stageContent.top;
+
+      // eslint-disable-next-line no-nested-ternary
+      pos.left = currX - startX + startLeft >= stageContent.left
+        ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+          ? currX - startX + startLeft
+          : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+        : stageContent.left;
 
       snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
     const up = () => {
       setCurrentComp(compDataItem);
-      recordSnapshot(snapshot);
+      if (snapshot.length > 0) {
+        recordSnapshot(snapshot);
+      }
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     };
@@ -136,6 +140,11 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       const currY = moveEvent.clientY;
       const offsetX = currX - startX;
       const offsetY = currY - startY;
+
+      if (offsetX === 0 && offsetY === 0) {
+        return;
+      }
+
       pos.height = hasT ? Math.abs(startHeight - offsetY) : startHeight + offsetY;
       pos.width = hasL ? Math.abs(startWidth - offsetX) : startWidth + offsetX;
       pos.top = hasT ? startTop + offsetY : startTop;
@@ -145,7 +154,9 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
 
     const up = () => {
       setCurrentComp(compDataItem);
-      recordSnapshot(snapshot);
+      if (snapshot.length > 0) {
+        recordSnapshot(snapshot);
+      }
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     };
@@ -157,13 +168,13 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     <div className={styles.Shape} style={compDataItem.style} onMouseDown={mouseDownOnShapeHandler}>
       {isActive
         ? pointList.map((point) => (
-            <div
-              key={point}
-              className={styles.ShapePoint}
-              style={getPointStyle(point)}
-              onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
-            />
-          ))
+          <div
+            key={point}
+            className={styles.ShapePoint}
+            style={getPointStyle(point)}
+            onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
+          />
+        ))
         : null}
       {children}
     </div>

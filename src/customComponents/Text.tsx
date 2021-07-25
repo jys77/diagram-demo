@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { CompDataItem } from '../store/interfaces';
-import { useCompDataModel } from '../store';
+import { useCompDataModel, useSnapshotModel } from '../store';
 
 const Text: React.FC<CompDataItem> = (compDataItem) => {
   const ref = useRef(null);
   const { changeComponent } = useCompDataModel();
+  const { recordSnapshot } = useSnapshotModel();
   const { id, props } = compDataItem;
   const [canEdit, setCanEdit] = useState<boolean>(false);
 
@@ -20,9 +21,10 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
     setCanEdit(true);
     selectText(ref.current as unknown as Node);
   };
-  const onBlur = (e: any) => {
+  const onBlur = (e: React.FocusEvent<HTMLDivElement>) => {
     const textValue = e.target.innerHTML || '&nbsp;';
-    changeComponent(compDataItem.id, { ...compDataItem, props: { value: textValue } });
+    const snapshot = changeComponent(compDataItem.id, { ...compDataItem, props: { value: textValue } });
+    recordSnapshot(snapshot);
     setCanEdit(false);
   };
 
