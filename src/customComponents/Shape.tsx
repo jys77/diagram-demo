@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { CompDataItem } from '../store/interfaces';
 import styles from './index.module.less';
-import { useCurrentCompModel, useCompDataModel } from '../store';
+import { useCurrentCompModel, useCompDataModel, useSnapshotModel } from '../store';
 
 const pointList = ['t', 'r', 'b', 'l', 'lt', 'rt', 'rb', 'lb'] as const;
-type Point = (typeof pointList)[number];
+type Point = typeof pointList[number];
 
 enum CURSOR {
   t = 'n-resize',
@@ -19,10 +19,14 @@ enum CURSOR {
 
 const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   const stageContent = document.querySelector('#stageContent')?.getBoundingClientRect() || {
-    top: 0, left: 0, height: 0, width: 0,
+    top: 0,
+    left: 0,
+    height: 0,
+    width: 0,
   };
   const { currentComp, setCurrentComp } = useCurrentCompModel();
   const { changeComponent } = useCompDataModel();
+  const { recordSnapshot } = useSnapshotModel();
   const [isActive, setIsActive] = useState<boolean>(false);
 
   useEffect(() => {
@@ -30,10 +34,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   }, [currentComp]);
 
   const getPointStyle = (point: Point) => {
-    const {
-      width,
-      height,
-    } = compDataItem.style as {
+    const { width, height } = compDataItem.style as {
       width: number | string;
       height: number | string;
       top: string | number;
@@ -78,28 +79,33 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startTop = Number(pos.top);
     const startLeft = Number(pos.left);
 
+    let snapshot: CompDataItem[] = [];
+
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
 
       // eslint-disable-next-line no-nested-ternary
-      pos.top = currY - startY + startTop >= stageContent.top
-        ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-          ? currY - startY + startTop
-          : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-        : stageContent.top;
+      pos.top =
+        currY - startY + startTop >= stageContent.top
+          ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+            ? currY - startY + startTop
+            : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+          : stageContent.top;
 
       // eslint-disable-next-line no-nested-ternary
-      pos.left = currX - startX + startLeft >= stageContent.left
-        ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
-          ? currX - startX + startLeft
-          : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
-        : stageContent.left;
+      pos.left =
+        currX - startX + startLeft >= stageContent.left
+          ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+            ? currX - startX + startLeft
+            : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+          : stageContent.left;
 
-      changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
     const up = () => {
       setCurrentComp(compDataItem);
+      recordSnapshot(snapshot);
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     };
@@ -123,6 +129,8 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startHeight = Number(pos.height);
     const startWidth = Number(pos.width);
 
+    let snapshot: CompDataItem[] = [];
+
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
@@ -132,11 +140,12 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       pos.width = hasL ? Math.abs(startWidth - offsetX) : startWidth + offsetX;
       pos.top = hasT ? startTop + offsetY : startTop;
       pos.left = hasL ? startLeft + offsetX : startLeft;
-      changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
 
     const up = () => {
       setCurrentComp(compDataItem);
+      recordSnapshot(snapshot);
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
     };
@@ -146,14 +155,16 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
 
   return (
     <div className={styles.Shape} style={compDataItem.style} onMouseDown={mouseDownOnShapeHandler}>
-      {isActive ? pointList.map((point) => (
-        <div
-          key={point}
-          className={styles.ShapePoint}
-          style={getPointStyle(point)}
-          onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
-        />
-      )) : null}
+      {isActive
+        ? pointList.map((point) => (
+            <div
+              key={point}
+              className={styles.ShapePoint}
+              style={getPointStyle(point)}
+              onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
+            />
+          ))
+        : null}
       {children}
     </div>
   );

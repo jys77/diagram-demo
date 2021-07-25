@@ -16,15 +16,17 @@ const useCompData = () => {
     return tempData;
   };
 
-  const changeComponent = (id: number, changedComp: CompDataItem) => {
+  const changeComponent = (id: number, changedComp: CompDataItem): CompDataItem[] => {
     const compIdx = compData.findIndex((item) => item.id === id);
+    let tempData: CompDataItem[] = compData;
     if (compIdx > -1) {
       setCompData((prevState) => {
-        const changed = deepClone(prevState);
-        changed.splice(compIdx, 1, changedComp);
-        return changed;
+        tempData = deepClone(prevState);
+        tempData.splice(compIdx, 1, changedComp);
+        return tempData;
       });
     }
+    return tempData;
   };
 
   return {
