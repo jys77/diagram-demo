@@ -6,8 +6,8 @@ import { Editor } from './Editor';
 import styles from './index.module.less';
 
 const Stage: React.FC = () => {
-  const { setCurrentComp } = useCurrentCompModel();
-  const { addComponent } = useCompDataModel();
+  const { currentComp, setCurrentComp } = useCurrentCompModel();
+  const { addComponent, changeComponent } = useCompDataModel();
   const { recordSnapshot } = useSnapshotModel();
 
   const onDrop = (e: any) => {
@@ -31,9 +31,27 @@ const Stage: React.FC = () => {
     setCurrentComp(null);
   };
 
+  const onKeydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.code === 'Delete' && currentComp !== null) {
+      changeComponent(currentComp.id);
+      setCurrentComp(null);
+    }
+  };
+
   return (
     <div className={styles.StageContainer}>
-      <div id="stageContent" className={styles.StageContent} onDrop={onDrop} onDragOver={onDragOver} onMouseUp={deselectCurrentComp}>
+      <div
+        id="stageContent"
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+        tabIndex={-1}
+        className={styles.StageContent}
+        onDrop={onDrop}
+        onDragOver={onDragOver}
+        onMouseUp={deselectCurrentComp}
+        onKeyDown={onKeydown}
+      >
         <Editor />
       </div>
     </div>
