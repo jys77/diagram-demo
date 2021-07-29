@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { CompDataItem } from '../store/interfaces';
 import { useCompDataModel, useSnapshotModel } from '../store';
+import styles from './index.module.less';
 
 const Text: React.FC<CompDataItem> = (compDataItem) => {
   const ref = useRef(null);
@@ -29,17 +30,16 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
   };
 
   return (
-    <div>
-      <div
-        contentEditable={canEdit}
-        onDoubleClick={onDoubleClick}
-        onBlur={onBlur}
-        tabIndex={id}
+    <div
+      className={styles.Text}
+      contentEditable={canEdit}
+      onDoubleClick={onDoubleClick}
+      onBlur={onBlur}
+      tabIndex={id}
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: props.value }}
-        ref={ref}
-      />
-    </div>
+      dangerouslySetInnerHTML={{ __html: props.value }}
+      ref={ref}
+    />
   );
 };
 

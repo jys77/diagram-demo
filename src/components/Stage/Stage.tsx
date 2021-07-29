@@ -32,8 +32,6 @@ const Stage: React.FC = () => {
   };
 
   const onKeydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
     if (e.code === 'Delete' && currentComp !== null) {
       changeComponent(currentComp.id);
       setCurrentComp(null);
