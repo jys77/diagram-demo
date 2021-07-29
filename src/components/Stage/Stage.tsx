@@ -3,6 +3,7 @@ import componentList from '../../customComponents/componentList';
 import { deepClone, generateId } from '../../utils';
 import { useCompDataModel, useCurrentCompModel, useSnapshotModel } from '../../store';
 import { Editor } from './Editor';
+import Grid from './Grid';
 import styles from './index.module.less';
 
 const Stage: React.FC = () => {
@@ -50,6 +51,7 @@ const Stage: React.FC = () => {
         onMouseUp={deselectCurrentComp}
         onKeyDown={onKeydown}
       >
+        <Grid />
         <Editor />
       </div>
     </div>
