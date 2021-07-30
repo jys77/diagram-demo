@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { CompDataItem } from '../store/interfaces';
+import AnchorPoints, { AnchorPointsProps } from './AnchorPoints';
 import styles from './index.module.less';
 import { useCurrentCompModel, useCompDataModel, useSnapshotModel } from '../store';
 
@@ -28,6 +29,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   const { changeComponent } = useCompDataModel();
   const { recordSnapshot } = useSnapshotModel();
   const [isActive, setIsActive] = useState<boolean>(false);
+  const [showAnchorPoints, setShowAnchorPoints] = useState<boolean>(false);
 
   useEffect(() => {
     setIsActive(currentComp?.id === compDataItem.id);
@@ -64,8 +66,6 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     return {
       left: `${left}px`,
       top: `${top}px`,
-      marginLeft: '-4px',
-      marginTop: '-4px',
       cursor: CURSOR[point],
     };
   };
@@ -149,6 +149,14 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       pos.width = hasL ? Math.abs(startWidth - offsetX) : startWidth + offsetX;
       pos.top = hasT ? startTop + offsetY : startTop;
       pos.left = hasL ? startLeft + offsetX : startLeft;
+
+      // if the point is on the mid edge, don't resize the length of the edge.
+      if (point === 't' || point === 'b') {
+        pos.width = startWidth;
+      } else if (point === 'l' || point === 'r') {
+        pos.height = startHeight;
+      }
+
       snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
 
@@ -164,20 +172,56 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     document.addEventListener('mouseup', up);
   };
 
+  const mouseOverOnShapeHandler = () => {
+    setShowAnchorPoints(true);
+  };
+
+  const anchorPointsProps: AnchorPointsProps = {
+    width: compDataItem.style?.width as number,
+    height: compDataItem.style?.height as number,
+    top: compDataItem.style?.top as number,
+    left: compDataItem.style?.left as number,
+  };
+
+  const mouseMoveOutsideField = (e: MouseEvent) => {
+    const left = compDataItem.style?.left as number || 0;
+    const top = compDataItem.style?.top as number || 0;
+    const width = compDataItem.style?.width as number || 0;
+    const height = compDataItem.style?.height as number || 0;
+    const xRange: [number, number] = [left - 20, left + width + 20];
+    const yRange: [number, number] = [top - 20, top + height + 20];
+    if (e.clientX < xRange[0] || e.clientX > xRange[1] || e.clientY < yRange[0] || e.clientY > yRange[1]) {
+      if (showAnchorPoints) {
+        setShowAnchorPoints(false);
+        window.removeEventListener('mousemove', mouseMoveOutsideField);
+      }
+    }
+  };
+
+  window.addEventListener('mousemove', mouseMoveOutsideField);
+
   return (
-    <div className={styles.Shape} style={compDataItem.style} onMouseDown={mouseDownOnShapeHandler}>
-      {isActive
-        ? pointList.map((point) => (
-          <div
-            key={point}
-            className={styles.ShapePoint}
-            style={getPointStyle(point)}
-            onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
-          />
-        ))
-        : null}
-      {children}
-    </div>
+    <>
+      <div
+        className={styles.Shape}
+        style={compDataItem.style}
+        onMouseDown={mouseDownOnShapeHandler}
+        onMouseEnter={mouseOverOnShapeHandler}
+      >
+        {isActive
+          ? pointList.map((point) => (
+            <div
+              key={point}
+              className={styles.ShapePoint}
+              style={getPointStyle(point)}
+              onMouseDown={(e) => mouseDownOnPointHandler(e, point)}
+            />
+          ))
+          : null}
+        {children}
+      </div>
+      {showAnchorPoints && <AnchorPoints {...anchorPointsProps} />}
+    </>
   );
 };
 
