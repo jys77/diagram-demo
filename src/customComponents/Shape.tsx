@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { CompDataItem } from '../store/interfaces';
-import AnchorPoints, { AnchorPointsProps } from './AnchorPoints';
+import AnchorPoints from './AnchorPoints';
+import { AnchorPointsProps } from './interfaces';
 import styles from './index.module.less';
 import { useCurrentCompModel, useCompDataModel, useSnapshotModel } from '../store';
 
@@ -181,6 +182,8 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     height: compDataItem.style?.height as number,
     top: compDataItem.style?.top as number,
     left: compDataItem.style?.left as number,
+    setShowAnchorPoints,
+    stageContent,
   };
 
   const mouseMoveOutsideField = (e: MouseEvent) => {
