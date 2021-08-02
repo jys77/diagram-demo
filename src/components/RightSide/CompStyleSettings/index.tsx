@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { InputNumber } from 'antd';
 import { useCurrentCompModel, useCompDataModel } from '../../../store';
 import styles from './index.module.less';
 
 const CompStyleSettings = () => {
   const { currentComp } = useCurrentCompModel();
-  const { compData, changeComponent } = useCompDataModel();
-
-  useEffect(() => {
-    console.log(compData);
-  }, [compData]);
+  const { changeComponent } = useCompDataModel();
 
   const onWidthChange = (value: number) => {
     if (currentComp) {

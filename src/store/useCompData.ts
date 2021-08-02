@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { createModel } from 'hox';
 import { CompDataItem } from './interfaces';
 import { deepClone } from '../utils';
+import useAnchorPathsModel from './useAnchorPaths';
 
 const useCompData = () => {
   const [compData, setCompData] = useState<CompDataItem[]>([] as CompDataItem[]);
+  const { changeAnchorPaths } = useAnchorPathsModel();
 
   const addComponent = (component: CompDataItem): CompDataItem[] => {
     let tempData: CompDataItem[] = [];
@@ -24,6 +26,21 @@ const useCompData = () => {
         tempData = deepClone(prevState);
         if (changedComp) {
           tempData.splice(compIdx, 1, changedComp);
+          const {
+            style: {
+              top,
+              left,
+              width,
+              height,
+            },
+          } = changedComp as { style: { top: number; left: number; width: number; height: number } };
+          changeAnchorPaths({
+            shapeId: id,
+            top,
+            left,
+            width,
+            height,
+          });
         } else {
           tempData.splice(compIdx, 1);
         }
