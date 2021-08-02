@@ -99,11 +99,11 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
 
       // save path with starting (x1,y1) and fromId
       setPath((prevState) => {
-        console.log({ prevState });
         const clonePath = deepClone(prevState);
         clonePath.x1 = pos.start.x;
         clonePath.y1 = pos.start.y;
         clonePath.fromId = shapeId;
+        clonePath.fromEdge = anchor;
         return clonePath;
       });
 
@@ -148,6 +148,7 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
       clonePath.x2 = x2;
       clonePath.y2 = y2;
       clonePath.toId = shapeId;
+      clonePath.toEdge = anchor;
       return clonePath;
     });
   };

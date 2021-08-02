@@ -6,15 +6,29 @@ import { AnchorPath } from './interfaces';
 const useDrawingPath = () => {
   const { addAnchorPath } = useAnchorPathsModel();
   const [path, setPath] = useState<AnchorPath>({
-    x1: null, x2: null, y1: null, y2: null, fromId: null, toId: null,
+    x1: null,
+    x2: null,
+    y1: null,
+    y2: null,
+    fromId: null,
+    toId: null,
+    fromEdge: null,
+    toEdge: null,
   });
   const clearPath = () => {
     setPath({
-      x1: null, x2: null, y1: null, y2: null, fromId: null, toId: null,
+      x1: null,
+      x2: null,
+      y1: null,
+      y2: null,
+      fromId: null,
+      toId: null,
+      fromEdge: null,
+      toEdge: null,
     });
   };
   useEffect(() => {
-    if (!Object.values(path).includes(null)) {
+    if (!Object.values(path).includes(null) && path.fromId !== path.toId) {
       // const id = generatePathId();
       addAnchorPath(path);
     }

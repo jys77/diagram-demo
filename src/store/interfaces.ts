@@ -22,4 +22,6 @@ export interface AnchorPath {
   y1: number | null;
   x2: number | null;
   y2: number | null;
+  fromEdge: 't' | 'b' | 'l' | 'r' | null;
+  toEdge: 't' | 'b' | 'l' | 'r' | null;
 }
