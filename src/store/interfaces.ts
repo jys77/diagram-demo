@@ -14,3 +14,12 @@ export interface DashLinePos {
     y: number;
   }
 }
+
+export interface AnchorPath {
+  fromId: number | null;
+  toId: number | null;
+  x1: number | null;
+  y1: number | null;
+  x2: number | null;
+  y2: number | null;
+}

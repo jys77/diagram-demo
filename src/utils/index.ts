@@ -1,5 +1,5 @@
 export const deepClone = (target: any) => {
-  if (typeof target === 'object') {
+  if (typeof target === 'object' && target !== null) {
     const result = Array.isArray(target) ? [] : {};
     Object.keys(target).forEach((key: string) => {
       if (typeof target[key] === 'object') {
@@ -15,3 +15,6 @@ export const deepClone = (target: any) => {
 
 let id = 0;
 export const generateId = (): number => id++;
+
+let pathId = 0;
+export const generatePathId = (): number => pathId++;

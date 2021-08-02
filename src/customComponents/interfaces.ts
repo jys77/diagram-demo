@@ -15,4 +15,5 @@ export interface AnchorPointsProps {
   left: number;
   setShowAnchorPoints: React.Dispatch<React.SetStateAction<boolean>>;
   stageContent: DOMRect | { top: number; left: number; height: number; width: number; },
+  shapeId: number;
 }

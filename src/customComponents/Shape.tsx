@@ -184,6 +184,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     left: compDataItem.style?.left as number,
     setShowAnchorPoints,
     stageContent,
+    shapeId: compDataItem.id,
   };
 
   const mouseMoveOutsideField = (e: MouseEvent) => {

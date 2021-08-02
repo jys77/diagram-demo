@@ -1,5 +1,5 @@
 import React from 'react';
-import DashLine from '../../customComponents/Dashline';
+import { DashLine, AnchorPaths } from '../../customComponents';
 import { useDashLineModel } from '../../store';
 
 const Grid = () => {
@@ -38,6 +38,7 @@ const Grid = () => {
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
       {showDashLine && <DashLine />}
+      <AnchorPaths />
     </svg>
   );
 };
