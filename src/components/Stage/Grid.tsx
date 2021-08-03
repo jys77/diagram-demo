@@ -35,6 +35,17 @@ const Grid = () => {
         >
           <path id="markerId" d="M0,0 L0,10 L10,5 z" fill="#ACB1B5" />
         </marker>
+        <marker
+          id="arrow_hover"
+          markerUnits="strokeWidth"
+          markerWidth="10"
+          markerHeight="10"
+          refX="10"
+          refY="5"
+          orient="auto"
+        >
+          <path d="M0,0 L0,10 L10,5 z" fill="#0077FF" />
+        </marker>
       </defs>
       <rect width="100%" height="100%" fill="url(#grid)" />
       {showDashLine && <DashLine />}

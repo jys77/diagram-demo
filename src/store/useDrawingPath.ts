@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { createModel } from 'hox';
 import useAnchorPathsModel from './useAnchorPaths';
 import { AnchorPath } from './interfaces';
+import { generatePathId } from '../utils';
 
 const useDrawingPath = () => {
   const { addAnchorPath } = useAnchorPathsModel();
-  const [path, setPath] = useState<AnchorPath>({
+  const [path, setPath] = useState<Omit<AnchorPath, 'pathId'>>({
     x1: null,
     x2: null,
     y1: null,
@@ -29,8 +30,8 @@ const useDrawingPath = () => {
   };
   useEffect(() => {
     if (!Object.values(path).includes(null) && path.fromId !== path.toId) {
-      // const id = generatePathId();
-      addAnchorPath(path);
+      const pathId = generatePathId();
+      addAnchorPath({ ...path, pathId });
     }
   }, [path]);
   return {

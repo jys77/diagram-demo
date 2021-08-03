@@ -11,6 +11,7 @@ const useAnchorPaths = () => {
     width: 0,
   };
   const [anchorPathData, setAnchorPathData] = useState<AnchorPath[]>([]);
+
   const addAnchorPath = (anchorPath: AnchorPath) => {
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
@@ -18,6 +19,7 @@ const useAnchorPaths = () => {
       return cloneData;
     });
   };
+
   const changeAnchorPaths = ({
     shapeId,
     top,
@@ -95,10 +97,19 @@ const useAnchorPaths = () => {
     });
   };
 
+  // delete anchor paths by related shape id
   const deleteAnchorPaths = (shapeId: number) => {
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
       return cloneData.filter((path: AnchorPath) => path.fromId !== shapeId && path.toId !== shapeId);
+    });
+  };
+
+  // delete anchor path by its id
+  const removeAnchorPath = (pathId: number) => {
+    setAnchorPathData((prevState) => {
+      const cloneData = deepClone(prevState);
+      return cloneData.filter((path: AnchorPath) => path.pathId !== pathId);
     });
   };
 
@@ -107,6 +118,7 @@ const useAnchorPaths = () => {
     addAnchorPath,
     changeAnchorPaths,
     deleteAnchorPaths,
+    removeAnchorPath,
   };
 };
 

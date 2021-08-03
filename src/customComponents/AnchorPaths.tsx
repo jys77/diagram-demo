@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAnchorPathsModel } from '../store';
+import styles from './index.module.less';
 
 const AnchorPaths = () => {
-  const { anchorPathData } = useAnchorPathsModel();
+  const { anchorPathData, removeAnchorPath } = useAnchorPathsModel();
+  const [selectedPathId, setSelectedPathId] = useState<number | null>(null);
+  const selectPath = (pathId: number) => {
+    setSelectedPathId(pathId);
+  };
+  const onBlurPath = () => {
+    setSelectedPathId(null);
+  };
+  const onKeyDownOnPath = (e: React.KeyboardEvent) => {
+    if (e.code === 'Delete' && selectedPathId !== null) {
+      removeAnchorPath(selectedPathId);
+    }
+  };
   return (
     <>
-      {anchorPathData.map((path) => {
+      {anchorPathData.map((path, index) => {
         const {
           x1, y1, x2, y2,
         } = path as any;
@@ -16,12 +29,22 @@ const AnchorPaths = () => {
         const cp2Y = y2;
         const pathProps: React.SVGProps<SVGPathElement> = {
           d: `M ${x1}, ${y1} C ${cp1X}, ${cp1Y} ${cp2X}, ${cp2Y} ${x2}, ${y2}`,
-          strokeWidth: 1,
-          stroke: '#ACB1B5',
+          strokeWidth: selectedPathId === path.pathId ? 2 : 1,
+          stroke: selectedPathId === path.pathId ? '#0077ff' : '#ACB1B5',
           fill: 'none',
-          markerEnd: 'url(#arrow)',
+          markerEnd: selectedPathId === path.pathId ? 'url(#arrow_hover)' : 'url(#arrow)',
         };
-        return <path key={`${x1},${y1}-${x2},${y2}`} {...pathProps} />;
+        return (
+          <path
+            key={`${x1},${y1}-${x2},${y2}`}
+            className={styles.Path}
+            onClick={() => selectPath(path.pathId)}
+            tabIndex={index}
+            onBlur={onBlurPath}
+            onKeyDown={onKeyDownOnPath}
+            {...pathProps}
+          />
+        );
       })}
     </>
   );

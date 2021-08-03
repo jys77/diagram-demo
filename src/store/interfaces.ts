@@ -24,4 +24,5 @@ export interface AnchorPath {
   y2: number | null;
   fromEdge: 't' | 'b' | 'l' | 'r' | null;
   toEdge: 't' | 'b' | 'l' | 'r' | null;
+  pathId: number;
 }
