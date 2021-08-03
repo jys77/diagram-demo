@@ -94,10 +94,19 @@ const useAnchorPaths = () => {
       });
     });
   };
+
+  const deleteAnchorPaths = (shapeId: number) => {
+    setAnchorPathData((prevState) => {
+      const cloneData = deepClone(prevState);
+      return cloneData.filter((path: AnchorPath) => path.fromId !== shapeId && path.toId !== shapeId);
+    });
+  };
+
   return {
     anchorPathData,
     addAnchorPath,
     changeAnchorPaths,
+    deleteAnchorPaths,
   };
 };
 
