@@ -10,7 +10,6 @@ const ToolBar: React.FC = () => {
     <Card style={{ height: '5rem' }}>
       <Button disabled={!canUndo} onClick={undo}>undo</Button>
       <Button disabled={!canRedo} onClick={redo}>redo</Button>
-      <Button>insert picture</Button>
       <Button>save</Button>
     </Card>
   );

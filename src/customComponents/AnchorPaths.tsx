@@ -20,13 +20,25 @@ const AnchorPaths = () => {
     <>
       {anchorPathData.map((path, index) => {
         const {
-          x1, y1, x2, y2,
+          x1, y1, x2, y2, toEdge,
         } = path as any;
-          // control points set to the mid edge
-        const cp1X = (x2 - x1) / 2 + x1;
-        const cp1Y = y1;
-        const cp2X = cp1X;
-        const cp2Y = y2;
+        let cp1X: number;
+        let cp1Y: number;
+        let cp2X: number;
+        let cp2Y: number;
+        // control points set to the mid edge
+        if (toEdge === 'l' || toEdge === 'r') {
+          cp1X = (x2 - x1) / 2 + x1;
+          cp1Y = y1;
+          cp2X = cp1X;
+          cp2Y = y2;
+        } else {
+          cp1X = x1;
+          cp1Y = (y2 - y1) / 2 + y1;
+          cp2X = x2;
+          cp2Y = cp1Y;
+        }
+
         const pathProps: React.SVGProps<SVGPathElement> = {
           d: `M ${x1}, ${y1} C ${cp1X}, ${cp1Y} ${cp2X}, ${cp2Y} ${x2}, ${y2}`,
           strokeWidth: selectedPathId === path.pathId ? 2 : 1,
