@@ -1,26 +1,28 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { createModel } from 'hox';
-import { CompDataItem } from './interfaces';
+import { AnchorPath, CompDataItem } from './interfaces';
 import { deepClone } from '../utils';
 import useAnchorPathsModel from './useAnchorPaths';
 
 const useCompData = () => {
   const [compData, setCompData] = useState<CompDataItem[]>([] as CompDataItem[]);
   const { changeAnchorPaths, deleteAnchorPaths } = useAnchorPathsModel();
+  const compDataRef = useRef<CompDataItem[]>([]);
 
   const addComponent = (component: CompDataItem): CompDataItem[] => {
-    let tempData: CompDataItem[] = [];
+    // let tempData: CompDataItem[] = [];
     setCompData((prevState) => {
-      tempData = deepClone(prevState);
-      tempData.push(component);
-      return tempData;
+      compDataRef.current = deepClone(prevState);
+      compDataRef.current.push(component);
+      return compDataRef.current;
     });
-    return tempData;
+    return compDataRef.current;
   };
 
-  const changeComponent = (id: number, changedComp?: CompDataItem): CompDataItem[] => {
+  const changeComponent = (id: number, changedComp?: CompDataItem): { compData: CompDataItem[]; anchorPaths: AnchorPath[] } => {
     const compIdx = compData.findIndex((item) => item.id === id);
-    let tempData: CompDataItem[] = compData;
+    let tempData: CompDataItem[] = [];
+    let anchorPaths: AnchorPath[] = [];
     if (compIdx > -1) {
       setCompData((prevState) => {
         tempData = deepClone(prevState);
@@ -34,7 +36,7 @@ const useCompData = () => {
               height,
             },
           } = changedComp as { style: { top: number; left: number; width: number; height: number } };
-          changeAnchorPaths({
+          anchorPaths = changeAnchorPaths({
             shapeId: id,
             top,
             left,
@@ -43,12 +45,15 @@ const useCompData = () => {
           });
         } else {
           tempData.splice(compIdx, 1);
-          deleteAnchorPaths(id);
+          anchorPaths = deleteAnchorPaths(id);
         }
         return tempData;
       });
     }
-    return tempData;
+    return {
+      compData: tempData,
+      anchorPaths,
+    };
   };
 
   return {

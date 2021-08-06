@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CompDataItem } from '../store/interfaces';
+import { AnchorPath, CompDataItem } from '../store/interfaces';
 import AnchorPoints from './AnchorPoints';
 import { AnchorPointsProps } from './interfaces';
 import styles from './index.module.less';
@@ -80,7 +80,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startTop = Number(pos.top);
     const startLeft = Number(pos.left);
 
-    let snapshot: CompDataItem[] = [];
+    let snapshot: (CompDataItem | AnchorPath)[] = [];
 
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
@@ -104,7 +104,8 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
           : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
         : stageContent.left;
 
-      snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      const { compData, anchorPaths } = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      snapshot = [...compData, ...anchorPaths];
     };
     const up = () => {
       setCurrentComp(compDataItem);
@@ -134,7 +135,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startHeight = Number(pos.height);
     const startWidth = Number(pos.width);
 
-    let snapshot: CompDataItem[] = [];
+    let snapshot: (CompDataItem | AnchorPath)[] = [];
 
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
@@ -158,7 +159,8 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
         pos.height = startHeight;
       }
 
-      snapshot = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      const { compData, anchorPaths } = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
+      snapshot = [...compData, ...anchorPaths];
     };
 
     const up = () => {

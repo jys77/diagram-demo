@@ -1,19 +1,25 @@
 import { createModel } from 'hox';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useCompDataModel from './useCompData';
-import { CompDataItem } from './interfaces';
+import useAnchorPathsModel from './useAnchorPaths';
+import { CompDataItem, AnchorPath } from './interfaces';
 import { deepClone } from '../utils';
 
 const useSnapshot = () => {
   const { setCompData } = useCompDataModel();
-  const [snapshotData, setSnapshotData] = useState<CompDataItem[][]>([]);
+  const { setAnchorPathData } = useAnchorPathsModel();
+  const [snapshotData, setSnapshotData] = useState<(CompDataItem | AnchorPath)[][]>([]);
   const [snapshotIndex, setSnapshotIndex] = useState<number>(-1);
 
-  const recordSnapshot = (compData: CompDataItem[]) => {
+  useEffect(() => {
+    console.log(snapshotData);
+  }, [snapshotData]);
+
+  const recordSnapshot = (snapshot: (CompDataItem | AnchorPath)[]) => {
     setSnapshotData(((prevState) => {
-      const cloneSnapshotData = deepClone(prevState);
-      cloneSnapshotData[snapshotIndex + 1] = compData;
-      return cloneSnapshotData.slice(0, snapshotIndex + 2);
+      const cloneSnapshot = deepClone(prevState);
+      cloneSnapshot[snapshotIndex + 1] = snapshot;
+      return cloneSnapshot.slice(0, snapshotIndex + 2);
     }));
     setSnapshotIndex(snapshotIndex + 1);
   };
@@ -23,14 +29,36 @@ const useSnapshot = () => {
 
   const undo = () => {
     if (canUndo) {
-      setCompData(snapshotData[snapshotIndex - 1] || []);
+      const prevSnapshot = snapshotData[snapshotIndex - 1] || [];
+      const prevCompData: CompDataItem[] = [];
+      const prevAnchorPaths: AnchorPath[] = [];
+      [...prevSnapshot].forEach((item: CompDataItem | AnchorPath) => {
+        if (Object.prototype.hasOwnProperty.call(item, 'id')) {
+          prevCompData.push(item as CompDataItem);
+        } else if (Object.prototype.hasOwnProperty.call(item, 'pathId')) {
+          prevAnchorPaths.push(item as AnchorPath);
+        }
+      });
+      setCompData(prevCompData);
+      setAnchorPathData(prevAnchorPaths);
       setSnapshotIndex(snapshotIndex - 1);
     }
   };
 
   const redo = () => {
     if (canRedo) {
-      setCompData(snapshotData[snapshotIndex + 1]);
+      const nextSnapshot = snapshotData[snapshotIndex + 1] || [];
+      const nextCompData: CompDataItem[] = [];
+      const nextAnchorPaths: AnchorPath[] = [];
+      [...nextSnapshot].forEach((item: CompDataItem | AnchorPath) => {
+        if (Object.prototype.hasOwnProperty.call(item, 'id')) {
+          nextCompData.push(item as CompDataItem);
+        } else if (Object.prototype.hasOwnProperty.call(item, 'pathId')) {
+          nextAnchorPaths.push(item as AnchorPath);
+        }
+      });
+      setCompData(nextCompData);
+      setAnchorPathData(nextAnchorPaths);
       setSnapshotIndex((snapshotIndex + 1));
     }
   };

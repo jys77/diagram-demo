@@ -34,7 +34,8 @@ const Stage: React.FC = () => {
 
   const onKeydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.code === 'Delete' && currentComp !== null) {
-      changeComponent(currentComp.id);
+      const { compData, anchorPaths } = changeComponent(currentComp.id);
+      recordSnapshot([...compData, ...anchorPaths]);
       setCurrentComp(null);
     }
   };
