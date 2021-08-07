@@ -6,7 +6,6 @@ import styles from './index.module.less';
 
 const LeftSide: React.FC = () => {
   const onDragStart = (e: BaseSyntheticEvent & { dataTransfer: any }) => {
-    console.log(e);
     e.dataTransfer.setData('index', e.target.dataset.index);
   };
   return (

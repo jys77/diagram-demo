@@ -3,22 +3,22 @@ import { InputNumber } from 'antd';
 import { useCurrentCompModel, useCompDataModel, useSnapshotModel } from '../../../store';
 import styles from './index.module.less';
 
-const CompStyleSettings = () => {
+const CompStyleSettings: React.FC = () => {
   const { currentComp } = useCurrentCompModel();
   const { changeComponent } = useCompDataModel();
-  const { recordSnapshot } = useSnapshotModel();
+  const { setRecordCount } = useSnapshotModel();
 
   const onWidthChange = (value: number) => {
     if (currentComp) {
-      const { compData, anchorPaths } = changeComponent(currentComp.id, { ...currentComp, style: { ...currentComp.style, width: value || 1 } });
-      recordSnapshot([...compData, ...anchorPaths]);
+      changeComponent(currentComp.id, { ...currentComp, style: { ...currentComp.style, width: value || 1 } });
+      setRecordCount((prevState) => prevState + 1);
     }
   };
 
   const onHeightChange = (value: number) => {
     if (currentComp) {
-      const { compData, anchorPaths } = changeComponent(currentComp.id, { ...currentComp, style: { ...currentComp.style, height: value || 1 } });
-      recordSnapshot([...compData, ...anchorPaths]);
+      changeComponent(currentComp.id, { ...currentComp, style: { ...currentComp.style, height: value || 1 } });
+      setRecordCount((prevState) => prevState + 1);
     }
   };
 

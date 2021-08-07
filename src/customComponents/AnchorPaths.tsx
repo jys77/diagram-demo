@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useAnchorPathsModel, useSnapshotModel } from '../store';
 import styles from './index.module.less';
 
-const AnchorPaths = () => {
+const AnchorPaths: React.FC = () => {
   const { anchorPathData, removeAnchorPath } = useAnchorPathsModel();
-  const { recordSnapshot } = useSnapshotModel();
+  const { setRecordCount } = useSnapshotModel();
   const [selectedPathId, setSelectedPathId] = useState<number | null>(null);
   const selectPath = (pathId: number) => {
     setSelectedPathId(pathId);
@@ -14,8 +14,9 @@ const AnchorPaths = () => {
   };
   const onKeyDownOnPath = (e: React.KeyboardEvent) => {
     if (e.code === 'Delete' && selectedPathId !== null) {
-      const snapshot = removeAnchorPath(selectedPathId);
-      recordSnapshot(snapshot);
+      removeAnchorPath(selectedPathId);
+      setRecordCount((prevState) => prevState + 1);
+      setSelectedPathId(null);
     }
   };
   return (

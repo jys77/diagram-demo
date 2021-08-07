@@ -1,59 +1,60 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { createModel } from 'hox';
-import { AnchorPath, CompDataItem } from './interfaces';
+import { CompDataItem } from './interfaces';
 import { deepClone } from '../utils';
 import useAnchorPathsModel from './useAnchorPaths';
 
 const useCompData = () => {
   const [compData, setCompData] = useState<CompDataItem[]>([] as CompDataItem[]);
   const { changeAnchorPaths, deleteAnchorPaths } = useAnchorPathsModel();
-  const compDataRef = useRef<CompDataItem[]>([]);
 
-  const addComponent = (component: CompDataItem): CompDataItem[] => {
-    // let tempData: CompDataItem[] = [];
+  const addComponent = (component: CompDataItem) => {
     setCompData((prevState) => {
-      compDataRef.current = deepClone(prevState);
-      compDataRef.current.push(component);
-      return compDataRef.current;
+      const tempData = deepClone(prevState);
+      tempData.push(component);
+      return tempData;
     });
-    return compDataRef.current;
   };
 
-  const changeComponent = (id: number, changedComp?: CompDataItem): { compData: CompDataItem[]; anchorPaths: AnchorPath[] } => {
+  const changeComponent = (
+    id: number,
+    changedComp: CompDataItem,
+  ) => {
     const compIdx = compData.findIndex((item) => item.id === id);
-    let tempData: CompDataItem[] = [];
-    let anchorPaths: AnchorPath[] = [];
-    if (compIdx > -1) {
-      setCompData((prevState) => {
-        tempData = deepClone(prevState);
-        if (changedComp) {
-          tempData.splice(compIdx, 1, changedComp);
-          const {
-            style: {
-              top,
-              left,
-              width,
-              height,
-            },
-          } = changedComp as { style: { top: number; left: number; width: number; height: number } };
-          anchorPaths = changeAnchorPaths({
-            shapeId: id,
-            top,
-            left,
-            width,
-            height,
-          });
-        } else {
-          tempData.splice(compIdx, 1);
-          anchorPaths = deleteAnchorPaths(id);
-        }
-        return tempData;
+    setCompData((prevState) => {
+      const tempData = deepClone(prevState);
+      if (compIdx > -1) {
+        tempData.splice(compIdx, 1, changedComp);
+      }
+      const {
+        style: {
+          top,
+          left,
+          width,
+          height,
+        },
+      } = changedComp as { style: { top: number; left: number; width: number; height: number } };
+      changeAnchorPaths({
+        shapeId: id,
+        top,
+        left,
+        width,
+        height,
       });
-    }
-    return {
-      compData: tempData,
-      anchorPaths,
-    };
+      return tempData;
+    });
+  };
+
+  const deleteComponent = (id: number) => {
+    const compIdx = compData.findIndex((item) => item.id === id);
+    setCompData((prevState) => {
+      const tempData = deepClone(prevState);
+      if (compIdx > -1) {
+        tempData.splice(compIdx, 1);
+      }
+      deleteAnchorPaths(id);
+      return tempData;
+    });
   };
 
   return {
@@ -61,6 +62,7 @@ const useCompData = () => {
     setCompData,
     addComponent,
     changeComponent,
+    deleteComponent,
   };
 };
 

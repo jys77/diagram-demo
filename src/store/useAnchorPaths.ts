@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { createModel } from 'hox';
 import { AnchorPath } from './interfaces';
 import { deepClone } from '../utils';
@@ -11,16 +11,14 @@ const useAnchorPaths = () => {
     width: 0,
   };
   const [anchorPathData, setAnchorPathData] = useState<AnchorPath[]>([]);
-  const anchorPaths = useRef<AnchorPath[]>([]);
 
-  const addAnchorPath = (anchorPath: AnchorPath): AnchorPath[] => {
-    // let cloneData!: AnchorPath[];
-    setAnchorPathData((prevState) => {
-      anchorPaths.current = deepClone(prevState);
-      anchorPaths.current.push(anchorPath);
-      return anchorPaths.current;
-    });
-    return anchorPaths.current;
+  const addAnchorPath = (anchorPath: AnchorPath) => {
+    if (!Object.values(anchorPath).includes(null) && anchorPath.fromId !== anchorPath.toId) {
+      setAnchorPathData((prevState) => {
+        const anchorPaths = [...deepClone(prevState), anchorPath];
+        return anchorPaths;
+      });
+    }
   };
 
   const changeAnchorPaths = ({
@@ -35,13 +33,12 @@ const useAnchorPaths = () => {
     left: number;
     width: number;
     height: number;
-  }): AnchorPath[] => {
-    let filteredData: AnchorPath[] = [];
+  }) => {
     const topInSvg = top - stageContent.top;
     const leftInSvg = left - stageContent.left;
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
-      filteredData = cloneData.map((path: AnchorPath) => {
+      const filteredData = cloneData.map((path: AnchorPath) => {
         if (path.fromId === shapeId) {
           const { fromEdge } = path;
           let x1: number;
@@ -100,29 +97,24 @@ const useAnchorPaths = () => {
       });
       return filteredData;
     });
-    return filteredData;
   };
 
   // delete anchor paths by related shape id
-  const deleteAnchorPaths = (shapeId: number): AnchorPath[] => {
-    let filteredData: AnchorPath[] = [];
+  const deleteAnchorPaths = (shapeId: number) => {
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
-      filteredData = cloneData.filter((path: AnchorPath) => path.fromId !== shapeId && path.toId !== shapeId);
+      const filteredData = cloneData.filter((path: AnchorPath) => path.fromId !== shapeId && path.toId !== shapeId);
       return filteredData;
     });
-    return filteredData;
   };
 
   // delete anchor path by its id
-  const removeAnchorPath = (pathId: number): AnchorPath[] => {
-    let filteredData: AnchorPath[] = [];
+  const removeAnchorPath = (pathId: number) => {
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
-      filteredData = cloneData.filter((path: AnchorPath) => path.pathId !== pathId);
+      const filteredData = cloneData.filter((path: AnchorPath) => path.pathId !== pathId);
       return filteredData;
     });
-    return filteredData;
   };
 
   return {

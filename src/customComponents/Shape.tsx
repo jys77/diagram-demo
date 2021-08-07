@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AnchorPath, CompDataItem } from '../store/interfaces';
+import { CompDataItem } from '../store/interfaces';
 import AnchorPoints from './AnchorPoints';
 import { AnchorPointsProps } from './interfaces';
 import styles from './index.module.less';
@@ -28,7 +28,7 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   };
   const { currentComp, setCurrentComp } = useCurrentCompModel();
   const { changeComponent } = useCompDataModel();
-  const { recordSnapshot } = useSnapshotModel();
+  const { setRecordCount } = useSnapshotModel();
   const [isActive, setIsActive] = useState<boolean>(false);
   const [showAnchorPoints, setShowAnchorPoints] = useState<boolean>(false);
 
@@ -80,8 +80,6 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startTop = Number(pos.top);
     const startLeft = Number(pos.left);
 
-    let snapshot: (CompDataItem | AnchorPath)[] = [];
-
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
@@ -104,13 +102,14 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
           : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
         : stageContent.left;
 
-      const { compData, anchorPaths } = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
-      snapshot = [...compData, ...anchorPaths];
+      changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
-    const up = () => {
+    const up = (moveEvent: MouseEvent) => {
+      const currX = moveEvent.clientX;
+      const currY = moveEvent.clientY;
       setCurrentComp(compDataItem);
-      if (snapshot.length > 0) {
-        recordSnapshot(snapshot);
+      if (currX !== startX && currY !== startY) {
+        setRecordCount((prevState) => prevState + 1);
       }
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);
@@ -135,8 +134,6 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
     const startHeight = Number(pos.height);
     const startWidth = Number(pos.width);
 
-    let snapshot: (CompDataItem | AnchorPath)[] = [];
-
     const move = (moveEvent: MouseEvent) => {
       const currX = moveEvent.clientX;
       const currY = moveEvent.clientY;
@@ -159,14 +156,15 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
         pos.height = startHeight;
       }
 
-      const { compData, anchorPaths } = changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
-      snapshot = [...compData, ...anchorPaths];
+      changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
 
-    const up = () => {
+    const up = (moveEvent: MouseEvent) => {
+      const currX = moveEvent.clientX;
+      const currY = moveEvent.clientY;
       setCurrentComp(compDataItem);
-      if (snapshot.length > 0) {
-        recordSnapshot(snapshot);
+      if (currX !== startX && currY !== startY) {
+        setRecordCount((prevState) => prevState + 1);
       }
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);

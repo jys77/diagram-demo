@@ -6,23 +6,32 @@ import { CompDataItem, AnchorPath } from './interfaces';
 import { deepClone } from '../utils';
 
 const useSnapshot = () => {
-  const { setCompData } = useCompDataModel();
-  const { setAnchorPathData } = useAnchorPathsModel();
+  const { setCompData, compData } = useCompDataModel();
+  const { setAnchorPathData, anchorPathData } = useAnchorPathsModel();
   const [snapshotData, setSnapshotData] = useState<(CompDataItem | AnchorPath)[][]>([]);
   const [snapshotIndex, setSnapshotIndex] = useState<number>(-1);
+  const [recordCount, setRecordCount] = useState<number>(0);
 
   useEffect(() => {
     console.log(snapshotData);
   }, [snapshotData]);
 
   const recordSnapshot = (snapshot: (CompDataItem | AnchorPath)[]) => {
-    setSnapshotData(((prevState) => {
-      const cloneSnapshot = deepClone(prevState);
-      cloneSnapshot[snapshotIndex + 1] = snapshot;
-      return cloneSnapshot.slice(0, snapshotIndex + 2);
-    }));
-    setSnapshotIndex(snapshotIndex + 1);
+    if (Array.isArray(snapshot)) {
+      setSnapshotData(((prevState) => {
+        const cloneSnapshot = deepClone(prevState);
+        cloneSnapshot[snapshotIndex + 1] = snapshot;
+        return cloneSnapshot.slice(0, snapshotIndex + 2);
+      }));
+      setSnapshotIndex(snapshotIndex + 1);
+    }
   };
+
+  useEffect(() => {
+    if (recordCount !== 0) {
+      recordSnapshot([...compData, ...anchorPathData]);
+    }
+  }, [recordCount]);
 
   const canUndo = snapshotIndex >= 0;
   const canRedo = snapshotIndex < snapshotData.length - 1;
@@ -64,6 +73,7 @@ const useSnapshot = () => {
   };
 
   return {
+    setRecordCount,
     recordSnapshot,
     undo,
     redo,

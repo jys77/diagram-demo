@@ -6,7 +6,7 @@ import styles from './index.module.less';
 const Text: React.FC<CompDataItem> = (compDataItem) => {
   const ref = useRef(null);
   const { changeComponent } = useCompDataModel();
-  const { recordSnapshot } = useSnapshotModel();
+  const { setRecordCount } = useSnapshotModel();
   const { id, props } = compDataItem;
   const [canEdit, setCanEdit] = useState<boolean>(false);
 
@@ -24,8 +24,11 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
   };
   const onBlur = (e: React.FocusEvent<HTMLDivElement>) => {
     const textValue = e.target.innerHTML || '&nbsp;';
-    const snapshot = changeComponent(compDataItem.id, { ...compDataItem, props: { value: textValue } });
-    recordSnapshot(snapshot);
+    changeComponent(compDataItem.id, {
+      ...compDataItem,
+      props: { value: textValue },
+    });
+    setRecordCount((prevState) => prevState + 1);
     setCanEdit(false);
   };
 
@@ -36,7 +39,7 @@ const Text: React.FC<CompDataItem> = (compDataItem) => {
       onDoubleClick={onDoubleClick}
       onBlur={onBlur}
       tabIndex={id}
-        // eslint-disable-next-line react/no-danger
+      // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: props.value }}
       ref={ref}
     />

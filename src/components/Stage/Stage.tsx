@@ -8,8 +8,8 @@ import styles from './index.module.less';
 
 const Stage: React.FC = () => {
   const { currentComp, setCurrentComp } = useCurrentCompModel();
-  const { addComponent, changeComponent } = useCompDataModel();
-  const { recordSnapshot } = useSnapshotModel();
+  const { addComponent, deleteComponent } = useCompDataModel();
+  const { setRecordCount } = useSnapshotModel();
 
   const onDrop = (e: any) => {
     e.preventDefault();
@@ -19,8 +19,8 @@ const Stage: React.FC = () => {
     component.style.left = e.clientX;
     component.style.position = 'absolute';
     component.id = generateId();
-    const compData = addComponent(component);
-    recordSnapshot(compData);
+    addComponent(component);
+    setRecordCount((prevState) => prevState + 1);
   };
 
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -34,8 +34,8 @@ const Stage: React.FC = () => {
 
   const onKeydown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (e.code === 'Delete' && currentComp !== null) {
-      const { compData, anchorPaths } = changeComponent(currentComp.id);
-      recordSnapshot([...compData, ...anchorPaths]);
+      deleteComponent(currentComp.id);
+      setRecordCount((prevState) => prevState + 1);
       setCurrentComp(null);
     }
   };

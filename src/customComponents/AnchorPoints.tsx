@@ -1,9 +1,14 @@
 import React from 'react';
 import styles from './index.module.less';
 import { AnchorPointsProps } from './interfaces';
-import { useDashLineModel, useDrawingPathModel } from '../store';
-import { DashLinePos } from '../store/interfaces';
-import { deepClone } from '../utils';
+import {
+  useDashLineModel,
+  useDrawingPathModel,
+  useAnchorPathsModel,
+  useSnapshotModel,
+} from '../store';
+import { AnchorPath, DashLinePos } from '../store/interfaces';
+import { deepClone, generatePathId } from '../utils';
 
 const anchorList = ['t', 'b', 'l', 'r'] as const;
 type Anchor = typeof anchorList[number];
@@ -19,6 +24,8 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
 }) => {
   const { setPos, setShowDashLine, clearPos } = useDashLineModel();
   const { clearPath, setPath } = useDrawingPathModel();
+  const { addAnchorPath } = useAnchorPathsModel();
+  const { setRecordCount } = useSnapshotModel();
 
   const getAnchorStyle = (anchor: Anchor) => {
     let anchorTop;
@@ -96,16 +103,22 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
       setShowDashLine(false);
       clearPos();
       flag = 1;
+      let clonePath!: Omit<AnchorPath, 'pathId'>;
 
       // save path with starting (x1,y1) and fromId
       setPath((prevState) => {
-        const clonePath = deepClone(prevState);
+        clonePath = deepClone(prevState);
         clonePath.x1 = pos.start.x;
         clonePath.y1 = pos.start.y;
         clonePath.fromId = shapeId;
         clonePath.fromEdge = anchor;
         return clonePath;
       });
+      const pathId = generatePathId();
+      addAnchorPath({ ...clonePath, pathId });
+      if (!Object.values(clonePath).includes(null) && clonePath.fromId !== clonePath.toId) {
+        setRecordCount((prevState) => prevState + 1);
+      }
 
       document.removeEventListener('mousemove', move);
       document.removeEventListener('mouseup', up);

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { CompDataItem } from '../../../store/interfaces';
 import { useCompDataModel } from '../../../store';
 import { Shape, Text, Rect } from '../../../customComponents';
@@ -11,9 +11,6 @@ const customComponentsMap: { [k in string]: React.FC<any> } = {
 
 const Editor: React.FC = () => {
   const { compData } = useCompDataModel();
-  useEffect(() => {
-    // console.log(compData);
-  }, [compData]);
   return (
     <div className={styles.EditorContainer}>
       {compData && compData.map((comp: CompDataItem, key) => {
