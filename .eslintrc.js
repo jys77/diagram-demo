@@ -55,7 +55,15 @@ module.exports = {
     //自定义规则
     rules: {
         // 注释以空格开头
-        'spaced-comment': ['error', 'always'],
+        'spaced-comment': [
+            'error',
+            'always',
+            {
+                line: {
+                    markers: ['/'],
+                }
+            }
+        ],
         // 在代码上方注释（便于IDE读取）
         'line-comment-position': [
             'error',

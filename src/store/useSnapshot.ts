@@ -73,6 +73,8 @@ const useSnapshot = () => {
   };
 
   return {
+    snapshotData,
+    snapshotIndex,
     setRecordCount,
     recordSnapshot,
     undo,
