@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button, Card, message } from 'antd';
-import { useSnapshotModel } from '../../store';
+import {
+  useSnapshotModel, useCompDataModel, useCurrentCompModel,
+} from '../../store';
 
 const ToolBar: React.FC = () => {
   const {
@@ -10,11 +12,22 @@ const ToolBar: React.FC = () => {
     redo,
     snapshotData,
     snapshotIndex,
+    setRecordCount,
   } = useSnapshotModel();
+  const { clearAll } = useCompDataModel();
+  const { setCurrentComp } = useCurrentCompModel();
 
   const save = () => {
     window.localStorage.setItem('data', JSON.stringify(snapshotData[snapshotIndex]));
     message.success('Saved!');
+  };
+
+  const clear = () => {
+    clearAll();
+    setCurrentComp(null);
+    if (snapshotData.length > 0) {
+      setRecordCount((prevState) => prevState + 1);
+    }
   };
 
   const exportToPDF = () => {
@@ -35,6 +48,7 @@ const ToolBar: React.FC = () => {
       <Button disabled={!canUndo} onClick={undo}>undo</Button>
       <Button disabled={!canRedo} onClick={redo}>redo</Button>
       <Button onClick={save}>save</Button>
+      <Button onClick={clear}>clear</Button>
       <Button onClick={exportToPDF}>export to PDF</Button>
     </Card>
   );

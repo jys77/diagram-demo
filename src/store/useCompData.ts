@@ -6,7 +6,7 @@ import useAnchorPathsModel from './useAnchorPaths';
 
 const useCompData = () => {
   const [compData, setCompData] = useState<CompDataItem[]>([] as CompDataItem[]);
-  const { changeAnchorPaths, deleteAnchorPaths } = useAnchorPathsModel();
+  const { changeAnchorPaths, deleteAnchorPaths, setAnchorPathData } = useAnchorPathsModel();
 
   const addComponent = (component: CompDataItem) => {
     setCompData((prevState) => {
@@ -57,12 +57,18 @@ const useCompData = () => {
     });
   };
 
+  const clearAll = () => {
+    setCompData([]);
+    setAnchorPathData([]);
+  };
+
   return {
     compData,
     setCompData,
     addComponent,
     changeComponent,
     deleteComponent,
+    clearAll,
   };
 };
 
