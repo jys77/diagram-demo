@@ -37,7 +37,7 @@ const ToolBar: React.FC = () => {
     const contentString = content?.outerHTML;
     const printWindow = window.open('', '', `height=${height},width=${width}`);
     printWindow?.document.write('<html><head><title>diagram</title>');
-    printWindow?.document.write('</head><body>');
+    printWindow?.document.write('<style>*{margin:0;padding:0}</style></head><body>');
     printWindow?.document.write(contentString || '');
     printWindow?.document.write('</body></html>');
     printWindow?.document.close();
