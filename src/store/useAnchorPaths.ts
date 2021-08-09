@@ -4,12 +4,6 @@ import { AnchorPath } from './interfaces';
 import { deepClone } from '../utils';
 
 const useAnchorPaths = () => {
-  const stageContent = document.querySelector('#stageContent')?.getBoundingClientRect() || {
-    top: 0,
-    left: 0,
-    height: 0,
-    width: 0,
-  };
   const [anchorPathData, setAnchorPathData] = useState<AnchorPath[]>([]);
 
   const addAnchorPath = (anchorPath: AnchorPath) => {
@@ -34,8 +28,6 @@ const useAnchorPaths = () => {
     width: number;
     height: number;
   }) => {
-    const topInSvg = top - stageContent.top;
-    const leftInSvg = left - stageContent.left;
     setAnchorPathData((prevState) => {
       const cloneData = deepClone(prevState);
       const filteredData = cloneData.map((path: AnchorPath) => {
@@ -45,20 +37,20 @@ const useAnchorPaths = () => {
           let y1: number;
           switch (fromEdge) {
             case 't':
-              x1 = leftInSvg + width / 2;
-              y1 = topInSvg;
+              x1 = left + width / 2;
+              y1 = top;
               break;
             case 'b':
-              x1 = leftInSvg + width / 2;
-              y1 = topInSvg + height;
+              x1 = left + width / 2;
+              y1 = top + height;
               break;
             case 'l':
-              x1 = leftInSvg;
-              y1 = topInSvg + height / 2;
+              x1 = left;
+              y1 = top + height / 2;
               break;
             case 'r':
-              x1 = leftInSvg + width;
-              y1 = topInSvg + height / 2;
+              x1 = left + width;
+              y1 = top + height / 2;
               break;
             default:
               x1 = path.x1 as number;
@@ -72,20 +64,20 @@ const useAnchorPaths = () => {
           let y2: number;
           switch (toEdge) {
             case 't':
-              x2 = leftInSvg + width / 2;
-              y2 = topInSvg;
+              x2 = left + width / 2;
+              y2 = top;
               break;
             case 'b':
-              x2 = leftInSvg + width / 2;
-              y2 = topInSvg + height;
+              x2 = left + width / 2;
+              y2 = top + height;
               break;
             case 'l':
-              x2 = leftInSvg;
-              y2 = topInSvg + height / 2;
+              x2 = left;
+              y2 = top + height / 2;
               break;
             case 'r':
-              x2 = leftInSvg + width;
-              y2 = topInSvg + height / 2;
+              x2 = left + width;
+              y2 = top + height / 2;
               break;
             default:
               x2 = path.x2 as number;

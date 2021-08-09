@@ -89,18 +89,18 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
       }
 
       // eslint-disable-next-line no-nested-ternary
-      pos.top = currY - startY + startTop >= stageContent.top
-        ? currY - startY + startTop <= stageContent.top + stageContent.height - Number(compDataItem.style?.height)
+      pos.top = currY - startY + startTop >= 0
+        ? currY - startY + startTop <= stageContent.height - Number(compDataItem.style?.height)
           ? currY - startY + startTop
-          : stageContent.top + stageContent.height - Number(compDataItem.style?.height)
-        : stageContent.top;
+          : stageContent.height - Number(compDataItem.style?.height)
+        : 0;
 
       // eslint-disable-next-line no-nested-ternary
-      pos.left = currX - startX + startLeft >= stageContent.left
-        ? currX - startX + startLeft <= stageContent.left + stageContent.width - Number(compDataItem.style?.width)
+      pos.left = currX - startX + startLeft >= 0
+        ? currX - startX + startLeft <= stageContent.width - Number(compDataItem.style?.width)
           ? currX - startX + startLeft
-          : stageContent.left + stageContent.width - Number(compDataItem.style?.width)
-        : stageContent.left;
+          : stageContent.width - Number(compDataItem.style?.width)
+        : 0;
 
       changeComponent(compDataItem.id, { ...compDataItem, style: { ...pos } });
     };
@@ -188,8 +188,8 @@ const Shape: React.FC<CompDataItem> = ({ children, ...compDataItem }) => {
   };
 
   const mouseMoveOutsideField = (e: MouseEvent) => {
-    const left = compDataItem.style?.left as number || 0;
-    const top = compDataItem.style?.top as number || 0;
+    const left = compDataItem.style?.left as number + stageContent.left || 0;
+    const top = compDataItem.style?.top as number + stageContent.top || 0;
     const width = compDataItem.style?.width as number || 0;
     const height = compDataItem.style?.height as number || 0;
     const xRange: [number, number] = [left - 20, left + width + 20];

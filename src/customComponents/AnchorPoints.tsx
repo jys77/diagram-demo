@@ -60,8 +60,6 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
   const mouseDownOnAnchorPointHandler = (anchor: Anchor) => {
     // flag that makes anchor points hide and dash line shows after moving
     let flag = 1;
-    const topInSvg = top - stageContent.top;
-    const leftInSvg = left - stageContent.left;
     const pos: DashLinePos = { start: {}, end: {} } as DashLinePos;
 
     // clear previous anchor path first
@@ -69,24 +67,24 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
 
     switch (anchor) {
       case 't':
-        pos.start.x = leftInSvg + width / 2;
-        pos.start.y = topInSvg;
+        pos.start.x = left + width / 2;
+        pos.start.y = top;
         break;
       case 'b':
-        pos.start.x = leftInSvg + width / 2;
-        pos.start.y = topInSvg + height;
+        pos.start.x = left + width / 2;
+        pos.start.y = top + height;
         break;
       case 'l':
-        pos.start.x = leftInSvg;
-        pos.start.y = topInSvg + height / 2;
+        pos.start.x = left;
+        pos.start.y = top + height / 2;
         break;
       case 'r':
-        pos.start.x = leftInSvg + width;
-        pos.start.y = topInSvg + height / 2;
+        pos.start.x = left + width;
+        pos.start.y = top + height / 2;
         break;
       default:
-        pos.start.x = leftInSvg;
-        pos.start.y = topInSvg;
+        pos.start.x = left;
+        pos.start.y = top;
     }
     const move = (e: MouseEvent) => {
       if (flag) {
@@ -132,24 +130,22 @@ const AnchorPoints: React.FC<AnchorPointsProps> = ({
   const mouseUpOverAnchorHandler = (anchor: Anchor) => {
     let x2: number | null;
     let y2: number | null;
-    const topInSvg = top - stageContent.top;
-    const leftInSvg = left - stageContent.left;
     switch (anchor) {
       case 't':
-        x2 = leftInSvg + width / 2;
-        y2 = topInSvg;
+        x2 = left + width / 2;
+        y2 = top;
         break;
       case 'b':
-        x2 = leftInSvg + width / 2;
-        y2 = topInSvg + height;
+        x2 = left + width / 2;
+        y2 = top + height;
         break;
       case 'l':
-        x2 = leftInSvg;
-        y2 = topInSvg + height / 2;
+        x2 = left;
+        y2 = top + height / 2;
         break;
       case 'r':
-        x2 = leftInSvg + width;
-        y2 = topInSvg + height / 2;
+        x2 = left + width;
+        y2 = top + height / 2;
         break;
       default:
         x2 = null;

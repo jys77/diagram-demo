@@ -10,13 +10,18 @@ const Stage: React.FC = () => {
   const { currentComp, setCurrentComp } = useCurrentCompModel();
   const { addComponent, deleteComponent } = useCompDataModel();
   const { setRecordCount } = useSnapshotModel();
-
+  const stageContent = document.querySelector('#stageContent')?.getBoundingClientRect() || {
+    top: 0,
+    left: 0,
+    height: 0,
+    width: 0,
+  };
   const onDrop = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     const component = deepClone(componentList[e.dataTransfer.getData('index')]);
-    component.style.top = e.clientY;
-    component.style.left = e.clientX;
+    component.style.top = e.clientY - stageContent.top;
+    component.style.left = e.clientX - stageContent.left;
     component.style.position = 'absolute';
     component.id = generateId();
     addComponent(component);
